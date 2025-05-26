@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useMatch } from "react-router-dom";
 import Home from "./pages/student/Home";
 import CoursesList from "./pages/student/CoursesList";
 import CourseDetails from "./pages/student/CourseDetails";
@@ -16,10 +16,21 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import Navbar from "./components/student/Navbar";
 
 const App = () => {
+  const isEducator = useMatch("/educator/*");
+  const isAuthPage = useMatch("/auth/*");
   return (
-    <div>
+    <div className="text-default min-h-screen bg-white">
+      {/* Render Navbar only if not on Educator or Auth pages */}
+      {!isEducator && !isAuthPage && (
+        <div className="bg-cyan-100/70">
+          <Navbar />
+        </div>
+      )}
+      
+      {/* Main Routes */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<AuthPage />}>
@@ -34,7 +45,7 @@ const App = () => {
         <Route path="/my-enrollments" element={<MyEnrollments />} />
         <Route path="/player/:courseId" element={<Player />} />
         <Route path="/loading/:path" element={<Loading />} />
-        <Route path="/educator" element={<Educator />} >
+        <Route path="/educator" element={<Educator />}>
           <Route path="educator" element={<Dashboard />} />
           <Route path="add-course" element={<AddCourse />} />
           <Route path="my-courses" element={<MyCourses />} />
