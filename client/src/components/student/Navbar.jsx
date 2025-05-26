@@ -1,10 +1,15 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { assets } from "../../assets/assets";
+import { Avatar, Dropdown } from "react-daisyui";
+import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const location = useLocation();
   const isCourseListPage = location.pathname.includes("/course-list");
+
+  const { openSignIn } = useClerk();
+  const { user } = useUser();
 
   return (
     <div
@@ -23,13 +28,22 @@ const Navbar = () => {
 
       {/* Desktop Menu */}
       <div className="hidden md:flex items-center gap-6 text-gray-700 font-medium">
-        <button className="hover:text-blue-600 transition">Become Educator</button>
+        <button className="hover:text-blue-600 transition">
+          Become Educator
+        </button>
         <Link to="/my-enrollment" className="hover:text-blue-600 transition">
           My Enrollments
         </Link>
-        <button className="bg-blue-600 hover:bg-blue-700 transition text-white py-2 px-5 rounded-full">
-          Create Account
-        </button>
+        {user ? (
+          <UserButton />
+        ) : (
+          <button
+            onClick={() => openSignIn()}
+            className="bg-blue-600 hover:bg-blue-700 transition text-white py-2 px-5 rounded-full"
+          >
+            Create Account
+          </button>
+        )}
       </div>
 
       {/* Mobile Menu */}
@@ -38,9 +52,14 @@ const Navbar = () => {
         <Link to="/my-enrollment" className="hover:text-blue-600 transition">
           Enrollments
         </Link>
-        <button>
-          <img src={assets.user_icon} alt="User" className="w-6 cursor-pointer" />
-        </button>
+        <Avatar
+          innerClassName="rounded"
+          shape="circle"
+          letters="JO"
+          size="md"
+          online={true}
+          className="cursor-pointer hover:bg-blue-100 transition w-max h-max"
+        />
       </div>
     </div>
   );
